@@ -7,42 +7,135 @@
 --   Radiocarbon calibration with the intercept method optimised for fast
 --   calibration of many dates.
 @package currycarbon
-@version 0.7.0
+@version 0.7.1
 
 module Currycarbon.CalCurves.Intcal20
 intcal20 :: String
 
 module Currycarbon.Types
+
+-- | A data type to represent an uncalibrated radiocarbon date
 data UncalC14
 UncalC14 :: String -> Int -> Int -> UncalC14
+
+-- | Identifier, e.g. a lab number
+[_uncalC14id] :: UncalC14 -> String
+
+-- | Uncalibrated age BP in years
+[_uncalC14age] :: UncalC14 -> Int
+
+-- | One-sigma standard deviation of the uncalibrated age in years
+[_uncalC14sd] :: UncalC14 -> Int
+
+-- | A data type to represent a year-wise probability density for
+--   uncalibrated dates Although technically not correct, we still call
+--   this a probability density function
 data UncalPDF
 UncalPDF :: String -> [(Int, Float)] -> UncalPDF
-data CalPDF
-CalPDF :: String -> [(Int, Float)] -> CalPDF
-data CalC14
-CalC14 :: String -> [HDR] -> [HDR] -> CalC14
-data HDR
-HDR :: Int -> Int -> HDR
+
+-- | Identifier, e.g. a lab number
+[_uncalPDFid] :: UncalPDF -> String
+
+-- | List that stores years BP and the respective probability densities
+--   alongside each other
+[_uncalPDFagedens] :: UncalPDF -> [(Int, Float)]
+
+-- | Getter function to access the year BP variable in an uncalibrated age
+--   probability density list
+getBPsUncal :: UncalPDF -> [Int]
+
+-- | Getter function to access the density variable in an uncalibrated age
+--   probability density list
+getProbsUncal :: UncalPDF -> [Float]
+
+-- | A data type to represent a calibration curve
+newtype CalCurve
+
+-- | List that stores the sequence of year BP, year calBP and the one-sigma
+--   standard deviation (on the year BP scale) that makes up the
+--   calibration curve
+CalCurve :: [(Int, Int, Int)] -> CalCurve
+
+-- | Getter function to access the year BP variable in a calibration curve
+getBPs :: CalCurve -> [Int]
+
+-- | Getter function to access the year calBP variable in a calibration
+--   curve
+getCals :: CalCurve -> [Int]
+
+-- | Getter function to access the sigma variable in a calibration curve
+getCalSigmas :: CalCurve -> [Int]
+
+-- | A data type to represent a calibration curve in a <i>wide</i> matrix
+--   form
 data CalCurveMatrix
 CalCurveMatrix :: [Int] -> [Int] -> [[Float]] -> CalCurveMatrix
-newtype CalCurve
-CalCurve :: [(Int, Int, Int)] -> CalCurve
+
+-- | Row names of the calibration curve matrix: Uncalibrated age BP in
+--   years
+[_calCurveMatrixbp] :: CalCurveMatrix -> [Int]
+
+-- | Column names of the calibration curve matrix: ^ Calibrated age BP in
+--   years
+[_calCurveMatrixcalbp] :: CalCurveMatrix -> [Int]
+
+-- | Matrix (as a list of columns) with the probaility densities
+[_calCurveMatrixmatrix] :: CalCurveMatrix -> [[Float]]
+
+-- | A data type to represent a year-wise probability density for
+--   calibrated ages
+data CalPDF
+CalPDF :: String -> [(Int, Float)] -> CalPDF
+
+-- | Identifier, e.g. a lab number
+[_calPDFid] :: CalPDF -> String
+
+-- | List that stores years calBP and the respective probability densities
+--   alongside each other
+[_calPDFagedens] :: CalPDF -> [(Int, Float)]
+
+-- | Getter function to access the year BP variable in a calibrated age
+--   probability density list
 getBPsCal :: CalPDF -> [Int]
+
+-- | Getter function to access the density variable in a calibrated age
+--   probability density list
 getProbsCal :: CalPDF -> [Float]
-getNameCal :: CalPDF -> String
-getBPsUncal :: UncalPDF -> [Int]
-getProbsUncal :: UncalPDF -> [Float]
-getNameUncal :: UncalPDF -> String
-getBPs :: CalCurve -> [Int]
-getCals :: CalCurve -> [Int]
-getCalSigmas :: CalCurve -> [Int]
+
+-- | A data type to represent a human readable summary of a calibrated
+--   radiocarbon date
+data CalC14
+CalC14 :: String -> [HDR] -> [HDR] -> CalC14
+
+-- | Identifier, e.g. a lab number
+[_calC14id] :: CalC14 -> String
+
+-- | One-sigma high density regions
+[_calC14hdronesigma] :: CalC14 -> [HDR]
+
+-- | Two-sigma high density regions
+[_calC14hdrtwosigma] :: CalC14 -> [HDR]
+
+-- | A data type to represent a high density region of a probability
+--   distribution. A high density region is here defined as an age range,
+--   within which the respective cummulative probability (e.g. of an
+--   calibrated radiocarbon date density curve) is above a certain
+--   threshold
+data HDR
+HDR :: Int -> Int -> HDR
+
+-- | Start of the high density region
+[_hdrstart] :: HDR -> Int
+
+-- | End of the high density region
+[_hdrstop] :: HDR -> Int
 instance GHC.Show.Show Currycarbon.Types.UncalC14
 instance GHC.Show.Show Currycarbon.Types.UncalPDF
+instance GHC.Show.Show Currycarbon.Types.CalCurve
+instance GHC.Show.Show Currycarbon.Types.CalCurveMatrix
 instance GHC.Show.Show Currycarbon.Types.CalPDF
 instance GHC.Show.Show Currycarbon.Types.HDR
 instance GHC.Show.Show Currycarbon.Types.CalC14
-instance GHC.Show.Show Currycarbon.Types.CalCurveMatrix
-instance GHC.Show.Show Currycarbon.Types.CalCurve
 
 module Currycarbon.Parsers
 writeCalC14 :: FilePath -> [CalC14] -> IO ()
