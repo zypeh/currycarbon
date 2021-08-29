@@ -7,11 +7,12 @@
 --   Radiocarbon calibration with the intercept method optimised for fast
 --   calibration of many dates.
 @package currycarbon
-@version 0.7.2
+@version 0.9.0
 
 module Currycarbon.CalCurves.Intcal20
 
--- | The complete intcal20 calibration curve in a large string
+-- | The complete intcal20 calibration curve in a large string (Reimer et
+--   al. 2020, doi:10.1017/RDC.2020.41)
 intcal20 :: String
 
 module Currycarbon.Types
@@ -140,9 +141,12 @@ instance GHC.Show.Show Currycarbon.Types.HDR
 instance GHC.Show.Show Currycarbon.Types.CalC14
 
 module Currycarbon.Parsers
-writeCalC14 :: FilePath -> [CalC14] -> IO ()
+writeCalC14s :: FilePath -> [CalC14] -> IO ()
+renderCalC14ForFile :: CalC14 -> String
 renderCalC14s :: [CalC14] -> String
 renderCalC14 :: CalC14 -> String
+renderHDRsForFile :: [HDR] -> [(String, String)]
+renderHDRForFile :: HDR -> (String, String)
 renderHDRs :: [HDR] -> String
 renderHDR :: HDR -> String
 writeCalCurveMatrixFile :: FilePath -> CalCurveMatrix -> IO ()
@@ -154,6 +158,7 @@ readUncalC14String :: String -> Either String [UncalC14]
 parseOneUncalC14 :: Parser UncalC14
 writeCalCurveFile :: FilePath -> CalCurve -> IO ()
 renderCalCurve :: CalCurve -> String
+readCalCurve :: FilePath -> IO CalCurve
 loadCalCurve :: String -> CalCurve
 calCurveFileParser :: Parser [(Int, Int, Int)]
 calCurveLineParser :: Parser (Int, Int, Int)
@@ -182,13 +187,16 @@ module Currycarbon.CLI.RunCalibrate
 -- | A data type to represent the options to the CLI module function
 --   runCalibrate
 data CalibrateOptions
-CalibrateOptions :: [UncalC14] -> [FilePath] -> Bool -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> CalibrateOptions
+CalibrateOptions :: [UncalC14] -> [FilePath] -> Maybe FilePath -> Bool -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> CalibrateOptions
 
 -- | Uncalibrated dates that should be calibrated
 [_calibrateUncalC14] :: CalibrateOptions -> [UncalC14]
 
 -- | List of files with uncalibrated dates to be calibrated
 [_calibrateUncalC14File] :: CalibrateOptions -> [FilePath]
+
+-- | Path to a .14c file
+[_calibrateCalCurveFile] :: CalibrateOptions -> Maybe FilePath
 
 -- | Should a short output string be printed to the command line for every
 --   date
