@@ -7,9 +7,11 @@
 --   Radiocarbon calibration with the intercept method optimised for fast
 --   calibration of many dates.
 @package currycarbon
-@version 0.7.1
+@version 0.7.2
 
 module Currycarbon.CalCurves.Intcal20
+
+-- | The complete intcal20 calibration curve in a large string
 intcal20 :: String
 
 module Currycarbon.Types
@@ -158,36 +160,58 @@ calCurveLineParser :: Parser (Int, Int, Int)
 comments :: Parser String
 
 module Currycarbon.Calibration
-refineCal :: [CalPDF] -> [CalC14]
-refineCalOne :: CalPDF -> CalC14
-calibrateMany :: CalCurve -> [UncalC14] -> [CalPDF]
-calibrate :: CalCurve -> UncalC14 -> CalPDF
-prepareCalCurve :: CalCurve -> UncalPDF -> (CalCurve, CalCurveMatrix)
-normalizeCalPDF :: CalPDF -> CalPDF
-uncalToPDF :: UncalC14 -> UncalPDF
-dnormInt :: Int -> Int -> Int -> Float
-getRelevantCalCurveSegment :: UncalPDF -> CalCurve -> CalCurve
-interpolateCalCurve :: CalCurve -> CalCurve
-timeWindows :: [(a, b, c)] -> [((a, b, c), (a, b, c))]
-splitWhen :: (a -> Bool) -> [a] -> ([a], [a])
-makeBCADCalCurve :: CalCurve -> CalCurve
-makeCalCurveMatrix :: CalCurve -> CalCurveMatrix
-projectUncalOverCalCurve :: UncalPDF -> CalCurveMatrix -> CalPDF
 
-module Currycarbon.CLI.CLICalibrate
+-- | Take a raw calibration curve and an uncalibrated date and return a
+--   tuple with the relevant segment of the calibration curve in standard-
+--   and matrix-format
+prepareCalCurve :: CalCurve -> UncalPDF -> (CalCurve, CalCurveMatrix)
+
+-- | Transform an uncalibrated date to an uncalibrated probability density
+--   table
+uncalToPDF :: UncalC14 -> UncalPDF
+
+-- | Calibrates a list of dates with the provided calibration curve
+calibrateMany :: CalCurve -> [UncalC14] -> [CalPDF]
+
+-- | Transforms the raw, calibrated probability density table to a
+--   meaningful representation of a calibrated radiocarbon date
+refineCal :: [CalPDF] -> [CalC14]
+
+module Currycarbon.CLI.RunCalibrate
+
+-- | A data type to represent the options to the CLI module function
+--   runCalibrate
 data CalibrateOptions
 CalibrateOptions :: [UncalC14] -> [FilePath] -> Bool -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> CalibrateOptions
+
+-- | Uncalibrated dates that should be calibrated
 [_calibrateUncalC14] :: CalibrateOptions -> [UncalC14]
+
+-- | List of files with uncalibrated dates to be calibrated
 [_calibrateUncalC14File] :: CalibrateOptions -> [FilePath]
+
+-- | Should a short output string be printed to the command line for every
+--   date
 [_calibrateQuickOut] :: CalibrateOptions -> Bool
+
+-- | Path to an output file (see CLI documentation)
 [_calibrateDensityFile] :: CalibrateOptions -> Maybe FilePath
+
+-- | Path to an output file
 [_calibrateHDRFile] :: CalibrateOptions -> Maybe FilePath
+
+-- | Path to an output file
 [_calibrateCalCurveSegmentFile] :: CalibrateOptions -> Maybe FilePath
+
+-- | Path to an output file
 [_calibrateCalCurveMatrixFile] :: CalibrateOptions -> Maybe FilePath
+
+-- | Interface function to trigger calibration from the command line
 runCalibrate :: CalibrateOptions -> IO ()
-replaceEmptyNames :: [UncalC14] -> [UncalC14]
 
 module Currycarbon.Utils
+
+-- | Different exceptions for currycarbon
 data CurrycarbonException
 CurrycarbonCLIParsingException :: String -> CurrycarbonException
 instance GHC.Show.Show Currycarbon.Utils.CurrycarbonException

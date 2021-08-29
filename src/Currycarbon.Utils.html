@@ -4,9 +4,10 @@
 </span><span id="line-4"></span><span>
 </span><span id="line-5"></span><span class="hs-keyword">import</span><span>           </span><span class="annot"><span class="hs-identifier">Control.Exception</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Exception</span></span><span class="hs-special">)</span><span>
 </span><span id="line-6"></span><span>
-</span><span id="line-7"></span><span class="hs-keyword">data</span><span> </span><span id="CurrycarbonException"><span class="annot"><a href="Currycarbon.Utils.html#CurrycarbonException"><span class="hs-identifier hs-var">CurrycarbonException</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
-</span><span id="line-8"></span><span>    </span><span id="CurrycarbonCLIParsingException"><span class="annot"><a href="Currycarbon.Utils.html#CurrycarbonCLIParsingException"><span class="hs-identifier hs-var">CurrycarbonCLIParsingException</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
-</span><span id="line-9"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679042914"><span id="local-6989586621679042916"><span id="local-6989586621679042918"><span class="annot"><span class="annottext">Int -&gt; CurrycarbonException -&gt; ShowS
+</span><span id="line-7"></span><span class="hs-comment">-- | Different exceptions for currycarbon</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">data</span><span> </span><span id="CurrycarbonException"><span class="annot"><a href="Currycarbon.Utils.html#CurrycarbonException"><span class="hs-identifier hs-var">CurrycarbonException</span></a></span></span><span> </span><span class="hs-glyph">=</span><span>
+</span><span id="line-9"></span><span>    </span><span id="CurrycarbonCLIParsingException"><span class="annot"><a href="Currycarbon.Utils.html#CurrycarbonCLIParsingException"><span class="hs-identifier hs-var">CurrycarbonCLIParsingException</span></a></span></span><span> </span><span class="annot"><span class="hs-identifier hs-type">String</span></span><span>
+</span><span id="line-10"></span><span>    </span><span class="hs-keyword">deriving</span><span> </span><span class="hs-special">(</span><span id="local-6989586621679042919"><span id="local-6989586621679042921"><span id="local-6989586621679042923"><span class="annot"><span class="annottext">Int -&gt; CurrycarbonException -&gt; ShowS
 [CurrycarbonException] -&gt; ShowS
 CurrycarbonException -&gt; String
 (Int -&gt; CurrycarbonException -&gt; ShowS)
@@ -22,6 +23,6 @@ $cshow :: CurrycarbonException -&gt; String
 showsPrec :: Int -&gt; CurrycarbonException -&gt; ShowS
 $cshowsPrec :: Int -&gt; CurrycarbonException -&gt; ShowS
 </span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Show</span></span></span></span></span><span class="hs-special">)</span><span>
-</span><span id="line-10"></span><span>
-</span><span id="line-11"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679042905"><span id="local-6989586621679042907"><span id="local-6989586621679042909"><span class="annot"><span class="hs-identifier hs-type">Exception</span></span><span> </span><span class="annot"><a href="Currycarbon.Utils.html#CurrycarbonException"><span class="hs-identifier hs-type">CurrycarbonException</span></a></span></span></span></span><span>
-</span><span id="line-12"></span></pre></body></html>
+</span><span id="line-11"></span><span>
+</span><span id="line-12"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679042910"><span id="local-6989586621679042912"><span id="local-6989586621679042914"><span class="annot"><span class="hs-identifier hs-type">Exception</span></span><span> </span><span class="annot"><a href="Currycarbon.Utils.html#CurrycarbonException"><span class="hs-identifier hs-type">CurrycarbonException</span></a></span></span></span></span><span>
+</span><span id="line-13"></span></pre></body></html>
