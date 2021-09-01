@@ -198,9 +198,8 @@ CalibrateOptions :: [UncalC14] -> [FilePath] -> Maybe FilePath -> Bool -> Maybe 
 -- | Path to a .14c file
 [_calibrateCalCurveFile] :: CalibrateOptions -> Maybe FilePath
 
--- | Should a short output string be printed to the command line for every
---   date
-[_calibrateQuickOut] :: CalibrateOptions -> Bool
+-- | Suppress the printing of calibration results to the command line
+[_calibrateQuiet] :: CalibrateOptions -> Bool
 
 -- | Path to an output file (see CLI documentation)
 [_calibrateDensityFile] :: CalibrateOptions -> Maybe FilePath
