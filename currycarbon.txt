@@ -7,7 +7,7 @@
 --   Radiocarbon calibration with the intercept method optimised for fast
 --   calibration of many dates.
 @package currycarbon
-@version 0.10.0
+@version 0.12.0
 
 module Currycarbon.CalCurves.Intcal20
 
@@ -155,7 +155,7 @@ writeCalPDFs :: FilePath -> [CalPDF] -> IO ()
 renderCalPDF :: CalPDF -> String
 readUncalC14FromFile :: FilePath -> IO [UncalC14]
 readUncalC14String :: String -> Either String [UncalC14]
-parseOneUncalC14 :: Parser UncalC14
+parseUncalC14 :: Parser UncalC14
 writeCalCurveFile :: FilePath -> CalCurve -> IO ()
 renderCalCurve :: CalCurve -> String
 readCalCurve :: FilePath -> IO CalCurve
@@ -169,25 +169,25 @@ module Currycarbon.Calibration
 -- | Take a raw calibration curve and an uncalibrated date and return a
 --   tuple with the relevant segment of the calibration curve in standard-
 --   and matrix-format
-prepareCalCurve :: CalCurve -> UncalPDF -> (CalCurve, CalCurveMatrix)
+prepareCalCurve :: Bool -> CalCurve -> UncalPDF -> (CalCurve, CalCurveMatrix)
 
 -- | Transform an uncalibrated date to an uncalibrated probability density
 --   table
 uncalToPDF :: UncalC14 -> UncalPDF
 
 -- | Calibrates a list of dates with the provided calibration curve
-calibrateMany :: CalCurve -> [UncalC14] -> [CalPDF]
+calibrateDates :: Bool -> CalCurve -> [UncalC14] -> [CalPDF]
 
 -- | Transforms the raw, calibrated probability density table to a
 --   meaningful representation of a calibrated radiocarbon date
-refineCal :: [CalPDF] -> [CalC14]
+refineCalDates :: [CalPDF] -> [CalC14]
 
 module Currycarbon.CLI.RunCalibrate
 
 -- | A data type to represent the options to the CLI module function
 --   runCalibrate
 data CalibrateOptions
-CalibrateOptions :: [UncalC14] -> [FilePath] -> Maybe FilePath -> Bool -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> CalibrateOptions
+CalibrateOptions :: [UncalC14] -> [FilePath] -> Maybe FilePath -> Bool -> Bool -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> Maybe FilePath -> CalibrateOptions
 
 -- | Uncalibrated dates that should be calibrated
 [_calibrateUncalC14] :: CalibrateOptions -> [UncalC14]
@@ -197,6 +197,9 @@ CalibrateOptions :: [UncalC14] -> [FilePath] -> Maybe FilePath -> Bool -> Maybe 
 
 -- | Path to a .14c file
 [_calibrateCalCurveFile] :: CalibrateOptions -> Maybe FilePath
+
+-- | Interpolate the calibration curve to get a year-wise result
+[_calibrateInterpolateCalCurve] :: CalibrateOptions -> Bool
 
 -- | Suppress the printing of calibration results to the command line
 [_calibrateQuiet] :: CalibrateOptions -> Bool
