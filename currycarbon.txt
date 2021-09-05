@@ -7,7 +7,7 @@
 --   Radiocarbon calibration with the intercept method optimised for fast
 --   calibration of many dates.
 @package currycarbon
-@version 0.12.0
+@version 0.13.0
 
 module Currycarbon.CalCurves.Intcal20
 
@@ -22,88 +22,69 @@ data UncalC14
 UncalC14 :: String -> Int -> Int -> UncalC14
 
 -- | Identifier, e.g. a lab number
-[_uncalC14id] :: UncalC14 -> String
+[_uncalC14Id] :: UncalC14 -> String
 
--- | Uncalibrated age BP in years
-[_uncalC14age] :: UncalC14 -> Int
+-- | Years BP
+[_uncalC14BP] :: UncalC14 -> Int
 
--- | One-sigma standard deviation of the uncalibrated age in years
-[_uncalC14sd] :: UncalC14 -> Int
+-- | Standard deviation (one sigma in years)
+[_uncalC14Sigma] :: UncalC14 -> Int
 
 -- | A data type to represent a year-wise probability density for
 --   uncalibrated dates Although technically not correct, we still call
---   this a probability density function
+--   this a probability density function (PDF)
 data UncalPDF
-UncalPDF :: String -> [(Int, Float)] -> UncalPDF
+UncalPDF :: String -> Vector Int -> Vector Float -> UncalPDF
 
 -- | Identifier, e.g. a lab number
 [_uncalPDFid] :: UncalPDF -> String
 
--- | List that stores years BP and the respective probability densities
---   alongside each other
-[_uncalPDFagedens] :: UncalPDF -> [(Int, Float)]
+-- | Years BP or BC
+[_uncalPDFBPs] :: UncalPDF -> Vector Int
 
--- | Getter function to access the year BP variable in an uncalibrated age
---   probability density list
-getBPsUncal :: UncalPDF -> [Int]
-
--- | Getter function to access the density variable in an uncalibrated age
---   probability density list
-getProbsUncal :: UncalPDF -> [Float]
+-- | Probability densities
+[_uncalPDFDens] :: UncalPDF -> Vector Float
 
 -- | A data type to represent a calibration curve
-newtype CalCurve
+data CalCurve
+CalCurve :: Vector Int -> Vector Int -> Vector Int -> CalCurve
 
--- | List that stores the sequence of year BP, year calBP and the one-sigma
---   standard deviation (on the year BP scale) that makes up the
---   calibration curve
-CalCurve :: [(Int, Int, Int)] -> CalCurve
+-- | Years BP or BC
+[_calCurveBPs] :: CalCurve -> Vector Int
 
--- | Getter function to access the year BP variable in a calibration curve
-getBPs :: CalCurve -> [Int]
+-- | Years calBP or calBC
+[_calCurveCals] :: CalCurve -> Vector Int
 
--- | Getter function to access the year calBP variable in a calibration
---   curve
-getCals :: CalCurve -> [Int]
-
--- | Getter function to access the sigma variable in a calibration curve
-getCalSigmas :: CalCurve -> [Int]
+-- | Standard deviation (one sigma in years)
+[_calCurveSigmas] :: CalCurve -> Vector Int
 
 -- | A data type to represent a calibration curve in a <i>wide</i> matrix
 --   form
 data CalCurveMatrix
-CalCurveMatrix :: [Int] -> [Int] -> [[Float]] -> CalCurveMatrix
+CalCurveMatrix :: Vector Int -> Vector Int -> Vector (Vector Float) -> CalCurveMatrix
 
--- | Row names of the calibration curve matrix: Uncalibrated age BP in
---   years
-[_calCurveMatrixbp] :: CalCurveMatrix -> [Int]
+-- | Row names of the calibration curve matrix: Years BP or BC
+[_calCurveMatrixBPs] :: CalCurveMatrix -> Vector Int
 
--- | Column names of the calibration curve matrix: ^ Calibrated age BP in
---   years
-[_calCurveMatrixcalbp] :: CalCurveMatrix -> [Int]
+-- | Column names of the calibration curve matrix: Years calBP or calBC
+[_calCurveMatrixCalBPs] :: CalCurveMatrix -> Vector Int
 
--- | Matrix (as a list of columns) with the probaility densities
-[_calCurveMatrixmatrix] :: CalCurveMatrix -> [[Float]]
+-- | Matrix (as a list of columns) with the probability densities
+[_calCurveMatrixDens] :: CalCurveMatrix -> Vector (Vector Float)
 
 -- | A data type to represent a year-wise probability density for
 --   calibrated ages
 data CalPDF
-CalPDF :: String -> [(Int, Float)] -> CalPDF
+CalPDF :: String -> Vector Int -> Vector Float -> CalPDF
 
 -- | Identifier, e.g. a lab number
 [_calPDFid] :: CalPDF -> String
 
--- | List that stores years calBP and the respective probability densities
---   alongside each other
-[_calPDFagedens] :: CalPDF -> [(Int, Float)]
+-- | Years calBP or calBC
+[_calPDFBPs] :: CalPDF -> Vector Int
 
--- | Getter function to access the year BP variable in a calibrated age
---   probability density list
-getBPsCal :: CalPDF -> [Int]
-
--- | Getter function to access the density variable in a calibrated age
---   probability density list
-getProbsCal :: CalPDF -> [Float]
+-- | Probability densities
+[_calPDFDens] :: CalPDF -> Vector Float
 
 -- | A data type to represent a human readable summary of a calibrated
 --   radiocarbon date
@@ -114,10 +95,10 @@ CalC14 :: String -> [HDR] -> [HDR] -> CalC14
 [_calC14id] :: CalC14 -> String
 
 -- | One-sigma high density regions
-[_calC14hdronesigma] :: CalC14 -> [HDR]
+[_calC14HDROneSigma] :: CalC14 -> [HDR]
 
 -- | Two-sigma high density regions
-[_calC14hdrtwosigma] :: CalC14 -> [HDR]
+[_calC14HDRTwoSigma] :: CalC14 -> [HDR]
 
 -- | A data type to represent a high density region of a probability
 --   distribution. A high density region is here defined as an age range,
@@ -198,8 +179,8 @@ CalibrateOptions :: [UncalC14] -> [FilePath] -> Maybe FilePath -> Bool -> Bool -
 -- | Path to a .14c file
 [_calibrateCalCurveFile] :: CalibrateOptions -> Maybe FilePath
 
--- | Interpolate the calibration curve to get a year-wise result
-[_calibrateInterpolateCalCurve] :: CalibrateOptions -> Bool
+-- | Don't interpolate the calibration curve
+[_calibrateDontInterpolateCalCurve] :: CalibrateOptions -> Bool
 
 -- | Suppress the printing of calibration results to the command line
 [_calibrateQuiet] :: CalibrateOptions -> Bool
